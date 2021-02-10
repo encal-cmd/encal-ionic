@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/grupos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Novo Grupo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item> 
+              <ion-label position="floating">Nome</ion-label>
+              <ion-input type="text" formControlName="nome"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="!form.get('nome').valid && form.get('nome').touched" lines="none"><ion-label>Favor inserir um nome válido.</ion-label></ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label>Usuarios</ion-label>
+            <ion-select multiple="true" formControlName="usuariosPermitidos" cancelText="Cancelar" okText="Ok">
+              <ion-select-option *ngFor="let usu of usuarioList" value="{{usu.id}}">{{ usu.nome }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button type="button" color="primary" expand="block" (click)="onCreateGrupo()" [disabled]="!form.valid"> Cadastrar </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

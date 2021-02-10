@@ -1,0 +1,8 @@
+{
+  "name": "projeto-encal",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

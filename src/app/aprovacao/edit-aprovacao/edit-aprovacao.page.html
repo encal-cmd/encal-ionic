@@ -1,0 +1,103 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/aprovacao"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Avaliar Aprovação</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid *ngIf="!isLoading" padding>
+    <ion-row>
+      <ion-col size="12" text-center>
+        <font class="titulo">Titulo</font>
+        <br>
+        <font class="info">{{ aprovacao.titulo }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Empresa</font>
+        <br>
+        <font class="info">{{ aprovacao.empresa }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Status</font>
+        <br>
+        <font class="info pendente" *ngIf="aprovacao.status === 'PENDENTE'">{{aprovacao.status}}</font>
+        <font class="info aprovado" *ngIf="aprovacao.status === 'APROVADO'">{{aprovacao.status}}</font>
+        <font class="info negado" *ngIf="aprovacao.status === 'NEGADO'">{{aprovacao.status}}</font>
+      </ion-col>
+
+      <ion-col size="12">
+        <font class="titulo">Empresa</font>
+        <br>
+        <font class="info">{{ aprovacao.empresa }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Centro Custo</font>
+        <br>
+        <font class="info">{{ aprovacao.centroCusto }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Data Solicitação</font>
+        <br>
+        <font class="info">{{ aprovacao.dataSolicitacao }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Data Entrega</font>
+        <br>
+        <font class="info">{{ aprovacao.dataEntrega }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Valor</font>
+        <br>
+        <font class="info">{{ aprovacao.valor }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Obs Pagamento</font>
+        <br>
+        <font class="info">{{ aprovacao.obsPagamento }}</font>
+      </ion-col>
+      <ion-col size="12" text-center>
+        <font class="titulo">Prestador</font>
+        <hr>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Nome</font>
+        <br>
+        <font class="info">{{ aprovacao.prestadorNome }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Banco</font>
+        <br>
+        <font class="info">{{ aprovacao.prestadorBanco }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Agência</font>
+        <br>
+        <font class="info">{{ aprovacao.prestadorAgencia }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Conta</font>
+        <br>
+        <font class="info">{{ aprovacao.prestadorConta }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">CPF</font>
+        <br>
+        <font class="info">{{ aprovacao.prestadorCpf }}</font>
+      </ion-col>
+      <ion-col size="6" *ngIf="avaliadores.includes(currentUser.id.toString())">
+          <ion-button type="button" color="primary" expand="block" (click)="avaliar(aprovacao.id, 'APROVAR')"> Aprovar </ion-button>
+        </ion-col>
+      <ion-col size="6" *ngIf="avaliadores.includes(currentUser.id.toString())">
+          <ion-button type="button" color="danger" expand="block" (click)="avaliar(aprovacao.id, 'NEGAR')"> Negar </ion-button>
+        </ion-col>
+        <ion-col size="12" *ngIf="currentUser.id.toString() === aprovacao.user_criou_id.toString()">
+            <ion-button type="button" color="primary" expand="block" [routerLink]="'/aprovacao/new/' + aprovacao.id"> Editar </ion-button>
+            <ion-button type="button" color="danger" expand="block" (click)="apagar(aprovacao.id)"> Apagar </ion-button>
+          </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

@@ -1,0 +1,28 @@
+<ion-content class="back_grad">
+
+  <div class="back_grad" style="height: 100%; width: 100%;" text-center>
+    <br>
+    <br>
+    <br>
+    <ion-img class="logo_img" src="assets/imagens/logomarca-encal1.png"></ion-img>
+    <br>
+    <br>
+    <br>
+    
+    <form [formGroup]="form">
+        <ion-grid>
+          <ion-row>
+            <ion-col size-md="6" offset-md="3">
+              <input type="text" name="cpf" required formControlName="cpf" placeholder="Login">
+              <input type="password" name="password" required minlength="6" formControlName="senha" placeholder="Senha">
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-md="6" offset-md="3">
+              <ion-button class="button_login" type="button" (click)="onSubmit()" color="dark" expand="block" [disabled]="!form.valid"> Login </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+  </div>
+</ion-content>

@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/projetos"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="projeto.id == 0">Nova Projeto</ion-title>
+    <ion-title *ngIf="projeto.id != 0">Editar Projeto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Título</ion-label>
+              <ion-input type="text" formControlName="titulo"></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button type="button" color="primary" expand="block" (click)="onCreate()" *ngIf="projeto.id == 0"> Cadastrar </ion-button>
+          <ion-button type="button" color="primary" expand="block" (click)="onEditar()" *ngIf="projeto.id != 0 && currentUser && currentUser.permissoes[14]"> Editar </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <ion-grid *ngIf="!isLoading && projeto.etapas.length > 0">
+    <ion-row>
+      <ion-col size="12" text-center *ngIf="currentUser && currentUser.permissoes[14]">
+        <ion-item *ngFor="let etapa of projeto.etapas" [routerLink]="'/projetos/etapa/' + etapa[0]" detail>
+          <ion-label>
+            <h1>{{etapa[1]}}</h1>
+            <font *ngIf="etapa[3] === 'A definir'">Período: A definir.<br></font>
+            <font *ngIf="etapa[3] !== 'A definir'">Período: {{etapa[3]}} - {{etapa[4]}}<br></font>
+            <font class="pendente" *ngIf="etapa[2] === 'PENDENTE'">PENDENTE</font>
+            <font class="aprovado" *ngIf="etapa[2] === 'FINALIZADO'">FINALIZADO</font>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12" text-center *ngIf="currentUser && !currentUser.permissoes[14]">
+        <ion-item *ngFor="let etapa of projeto.etapas">
+          <ion-label>
+            <h1>{{etapa[1]}}</h1>
+            <font *ngIf="etapa[3] === 'A definir'">Período: A definir.<br></font>
+            <font *ngIf="etapa[3] !== 'A definir'">Período: {{etapa[3]}} - {{etapa[4]}}<br></font>
+            <font class="pendente" *ngIf="etapa[2] === 'PENDENTE'">PENDENTE</font>
+            <font class="aprovado" *ngIf="etapa[2] === 'FINALIZADO'">FINALIZADO</font>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

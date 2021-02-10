@@ -1,0 +1,41 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Projetos</ion-title>
+      <ion-buttons slot="primary">
+          <ion-button routerLink="/projetos/form/new" *ngIf="currentUser && currentUser.permissoes[13]">
+            <ion-icon name="add" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+  
+    <!-- Default Segment -->
+    <ion-segment (ionChange)="segmentChanged($event)" value="pendentes">
+      <ion-segment-button value="pendentes">
+        <ion-label>Pendentes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="finalizados">
+        <ion-label>Finalizados</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  
+    <div *ngIf="!isLoading && projetosShow.length <= 0" style="text-align: center; margin-top: 20px">Ainda não temos nenhum Projeto...</div>
+    <ion-grid *ngIf="!isLoading && projetosShow.length > 0">
+      <ion-row>
+        <ion-col size="12" text-center>
+          <ion-item *ngFor="let projeto of projetosShow" [routerLink]="'/projetos/form/' + projeto.id" detail>
+            <ion-label>
+              <h1>{{projeto.titulo}}</h1>
+              <font class="pendente" *ngIf="projeto.status === 'PENDENTE'">{{projeto.status}}</font>
+              <font class="aprovado" *ngIf="projeto.status === 'FINALIZADO'">{{projeto.status}}</font>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>

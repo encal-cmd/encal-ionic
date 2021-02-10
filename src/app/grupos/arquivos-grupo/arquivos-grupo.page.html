@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/grupos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Arquivos</ion-title>
+    <ion-buttons slot="primary">
+      <app-image-picker (imagePick)="onImagePicked($event)"></app-image-picker>
+      <ion-button (click)="UploadFile()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" *ngFor="let msg of messages">
+        <ion-img *ngIf="msg.tipo == 'imagem'" (click)="presentModal(this.authService.urlServer + msg.url)" [src]="this.authService.urlServer + msg.url" class="img_class"></ion-img>
+        
+        <div *ngIf="msg.tipo == 'anexo' && msg.downurl == null" style="height: 100px; margin: 0 auto;" text-center (click)="downloadAnexo(this.authService.urlServer+msg.url, msg.extensao, msg.id)"> 
+          {{ msg.anexoNome }}
+          <ion-icon *ngIf="!msg.isdownloading" name="cloud-download" style="font-size: 30px;" class="icon_primary"></ion-icon> 
+          <ion-spinner *ngIf="msg.isdownloading"></ion-spinner>
+        </div>
+        <div *ngIf="msg.tipo == 'anexo' && msg.downurl != null" style="height: 100px; margin: 0 auto;" text-center (click)="openFile(msg.downurl, msg.mimetype, msg.id)"> 
+          {{ msg.anexoNome }}
+          <ion-icon name="attach" style="font-size: 30px;" class="icon_primary"></ion-icon>
+        </div>
+      
+      
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

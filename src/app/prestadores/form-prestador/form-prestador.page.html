@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/prestadores"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Novo Prestador</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Nome</ion-label>
+              <ion-input type="text" formControlName="nome"></ion-input>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Banco</ion-label>
+              <ion-input type="text" formControlName="banco"></ion-input>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Agência</ion-label>
+              <ion-input type="text" formControlName="agencia"></ion-input>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Conta</ion-label>
+              <ion-input type="text" formControlName="conta"></ion-input>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">CPF</ion-label>
+              <ion-input type="text" formControlName="cpf"></ion-input>
+            </ion-item>  
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button type="button" color="primary" expand="block" (click)="onCreate()" *ngIf="prestador.id == 0"> Cadastrar </ion-button>
+          <ion-button type="button" color="primary" expand="block" (click)="onEditar()" *ngIf="prestador.id != 0"> Editar </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

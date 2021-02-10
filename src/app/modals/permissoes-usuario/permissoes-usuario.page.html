@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Permissões</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+  
+<ion-content>
+  <form [formGroup]="form">
+    <ion-card>
+      <ion-item>
+        <ion-label>Grupo</ion-label>
+      </ion-item>
+    
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-label>Ver Grupo</ion-label>
+            <ion-checkbox slot="end" formControlName="verGrupo"></ion-checkbox>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Criar Grupo</ion-label>
+            <ion-checkbox slot="end" formControlName="criarGrupo"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        <ion-label>Usuário</ion-label>
+      </ion-item>
+    
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-label>Ver Usuários</ion-label>
+            <ion-checkbox slot="end" formControlName="verUsu"></ion-checkbox>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Editar Usuários</ion-label>
+            <ion-checkbox slot="end" formControlName="editUsu"></ion-checkbox>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Criar Usuários</ion-label>
+            <ion-checkbox slot="end" formControlName="criarUsu"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        <ion-label>Aprovação</ion-label>
+      </ion-item>
+    
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-label>Ver Aprovacão</ion-label>
+            <ion-checkbox slot="end" formControlName="verAprov"></ion-checkbox>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Criar Usuários</ion-label>
+            <ion-checkbox slot="end" formControlName="criarAprov"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        <ion-label>Sistema</ion-label>
+      </ion-item>
+    
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-label>Resetar Senha</ion-label>
+            <ion-checkbox slot="end" formControlName="resetSenha"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>

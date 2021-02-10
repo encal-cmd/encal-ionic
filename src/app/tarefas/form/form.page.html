@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tarefas"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="tarefa.id == 0">Nova Tarefa</ion-title>
+    <ion-title *ngIf="tarefa.id != 0">Editar Tarefa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form" *ngIf="tarefa.id == 0 || (tarefa.user_criou_id != 0 && currentUser.id == tarefa.user_criou_id)">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Título</ion-label>
+              <ion-input type="text" formControlName="titulo"></ion-input>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Descrição</ion-label>
+              <ion-input type="text" formControlName="descricao"></ion-input>
+            </ion-item>   
+            <ion-list>
+              <ion-radio-group value="{{tipo}}" (ionChange)="trocaTipo($event)"> 
+                <ion-list-header>
+                  <ion-label>Tipo</ion-label>
+                </ion-list-header>
+                <ion-item>
+                  <ion-label>Tarefa</ion-label>
+                  <ion-radio slot="start" value="tarefa"></ion-radio>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Notificação</ion-label>
+                  <ion-radio slot="start" value="notificacao"></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-list> 
+            <ion-item>
+              <ion-label position="floating">Data Limite</ion-label>
+              <ion-datetime displayFormat="DD/MM/YYYY" formControlName="data_limite"></ion-datetime>
+            </ion-item>
+            <ion-item>
+              <ion-label>Usuário Responsável</ion-label>
+              <ionic-selectable
+                formControlName="user_id"
+                [items]="usuarios"
+                itemValueField="id"
+                itemTextField="nome"
+                [isMultiple]="true"
+                [canSearch]="true"
+                >
+              </ionic-selectable>
+            </ion-item>  
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button type="button" color="primary" expand="block" (click)="onCreate()" *ngIf="tarefa.id == 0"> Cadastrar </ion-button>
+          <ion-button type="button" color="primary" expand="block" (click)="onEditar()" *ngIf="tarefa.id != 0"> Editar </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <ion-grid *ngIf="tarefa.user_criou_id != 0 && currentUser.id != tarefa.user_criou_id" padding>
+    <ion-row>
+      <ion-col size="12" text-center>
+        <font class="titulo">Titulo</font>
+        <br>
+        <font class="info">{{ tarefa.titulo }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Descrição</font>
+        <br>
+        <font class="info">{{ tarefa.descricao }}</font> 
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Data Limite</font>
+        <br>
+        <font class="info">{{ data_limite_string }}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Status</font>
+        <br>
+        <font class="info pendente" *ngIf="tarefa.status === 'PENDENTE'">{{tarefa.status}}</font>
+        <font class="info aprovado" *ngIf="tarefa.status === 'FINALIZADO'">{{tarefa.status}}</font>
+      </ion-col>
+      <ion-col size="12">
+        <font class="titulo">Responsáveis</font>
+        <br>
+        <div *ngFor="let responsavel of responsaveis">
+          <font class="info">{{ responsavel.nome }}</font>
+          <br>
+        </div>
+      </ion-col>
+      <ion-col size="12">
+        <ion-button type="button" color="danger" expand="block" (click)="finalizarTarefa()" *ngIf="tarefa.user_id.split('||').includes(currentUser.id.toString()) && tarefa.status !== 'FINALIZADO'"> Finalizar </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

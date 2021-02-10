@@ -1,0 +1,60 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Agenda</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+  
+  
+
+<ion-content>
+  <!-- Default Segment -->
+  <ion-segment (ionChange)="segmentChanged($event)" value="dia">
+    <ion-segment-button value="dia">
+      <ion-label>Dia</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="semana">
+      <ion-label>Semana</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="mes">
+      <ion-label>Mês</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="2" text-center (click)="voltar()">
+        <
+      </ion-col>
+      <ion-col size="8" text-center>
+        {{buscaLabel}}
+        <font *ngIf="tipo === 'mes'">{{anomesLabel}}</font>
+      </ion-col>
+      <ion-col size="2" text-center (click)="avancar()">
+        >
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="eventosShow != undefined && eventosShow.length <= 0" style="text-align: center; margin-top: 20px">Sem tarefas !</div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item *ngFor="let evento of eventosShow" [routerLink]="'/tarefas/form/' + evento.id" detail>
+          <ion-icon name="create" slot="" style="margin-right: 10px; font-size: 30px" *ngIf="evento.tipo == 'tarefa'"></ion-icon>
+          <ion-icon name="mail-unread" slot="" style="margin-right: 10px; font-size: 30px" *ngIf="evento.tipo != 'tarefa'"></ion-icon>
+          <ion-label>
+            <h1>{{evento.titulo}} {{evento.id}}</h1>
+            {{strfDate(evento.data)}}
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+    
+</ion-content>

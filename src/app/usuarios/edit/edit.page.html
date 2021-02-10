@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/usuarios"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Editar Usuário</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div text-center *ngIf="isLoading"><br><ion-spinner></ion-spinner></div>
+  <form [formGroup]="form" *ngIf="!isLoading">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Nome</ion-label>
+              <ion-input type="text" formControlName="nome"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">E-mail</ion-label>
+              <ion-input type="email" formControlName="email"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">CPF</ion-label>
+              <ion-input type="text" formControlName="cpf"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Permissões</ion-label>
+              <ionic-selectable
+                formControlName="permissoes"
+                [items]="permissoesGet"
+                itemValueField="id"
+                itemTextField="nome"
+                [isMultiple]="true"
+                [canSearch]="true"
+                >
+              </ionic-selectable>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="currentUser && currentUser.permissoes[5]">
+        <ion-col>
+          <ion-button type="button" color="primary" expand="block" (click)="resetarSenha()"> Resetar Senha </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button type="button" color="primary" expand="block" (click)="attUsuario()" [disabled]="!form.valid"> Atualizar </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-card>
+      <ion-item>
+        <ion-label>Senha</ion-label>
+      </ion-item>
+    
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-list>
+                <ion-item>
+                  <ion-label position="floating">Senha</ion-label>
+                  <ion-input type="password" name="password" minlength="6" formControlName="novaSenha" placeholder="Senha"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Conf. Senha</ion-label>
+                  <ion-input type="password" name="password" minlength="6" formControlName="novaSenhaConf" placeholder="Senha"></ion-input>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button type="button" color="primary" expand="block" (click)="alterarSenha()"> Mudar Senha </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+    
+  </form>
+</ion-content>

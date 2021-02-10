@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/grupos"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Edit Grupo</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <div text-center *ngIf="isLoading"><br><ion-spinner></ion-spinner></div>
+    <form [formGroup]="form" *ngIf="!isLoading">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-list>
+              <ion-item> 
+                <ion-label position="floating">Nome</ion-label>
+                <ion-input type="text" formControlName="nome"></ion-input>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <ion-item>
+              <ion-label>Usuarios</ion-label>
+              <ion-select multiple="true" formControlName="usuariosPermitidos" cancelText="Cancelar" okText="Ok" [value]="usuariosPermitidos">
+                <ion-select-option *ngFor="let usu of usuarioList" value="{{usu.id}}">{{ usu.nome }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button type="button" color="primary" expand="block" (click)="editarGrupo()"> Atualizar </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-content>
+  

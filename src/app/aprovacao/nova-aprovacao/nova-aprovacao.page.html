@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/aprovacao"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="!this.editMode">Nova Solicitação</ion-title>
+    <ion-title *ngIf="this.editMode">Editar Solicitação</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Titulo</ion-label>
+              <ion-input type="text" formControlName="titulo"></ion-input>
+            </ion-item>  
+            <ion-list>
+              <ion-radio-group value="Encal" formControlName="empresa" (ionChange)="trocaEmpresa($event)"> 
+                <ion-list-header>
+                  <ion-label>Empresa</ion-label>
+                </ion-list-header>
+                <ion-item>
+                  <ion-label>Encal</ion-label>
+                  <ion-radio slot="start" value="Encal"></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-list>
+            <ion-item>
+              <ion-label position="floating">Centro de Custo</ion-label>
+              <ion-input type="text" formControlName="centroCusto"></ion-input>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Data Solicitação</ion-label>
+              <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataSolicitacao"></ion-datetime>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Data Entrega</ion-label>
+              <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataEntrega"></ion-datetime>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Solicitante</ion-label>
+              <ion-input type="text" formControlName="solicitante"></ion-input>
+            </ion-item>  
+            <ion-item>
+              <ion-label position="floating">Valor</ion-label>
+              <ion-input type="text" formControlName="valor" placeholder="(R$) Real" [brmasker]="{money: true, decimal: 2}" [disabled]="this.editMode"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Descrição Pagamento</ion-label>
+              <ion-input type="text" formControlName="obsPagamento"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Avaliadores</ion-label>
+              <ionic-selectable
+                formControlName="avaliadores"
+                [items]="avaliadoresSelect"
+                itemValueField="id"
+                itemTextField="nome"
+                [isMultiple]="true"
+                [canSearch]="true"
+                >
+              </ionic-selectable>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button *ngIf="!this.editMode" type="button" color="primary" expand="block" (click)="onCreateAprovacao()" [disabled]="!this.form.valid"> Cadastrar </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button *ngIf="this.editMode" type="button" color="primary" expand="block" (click)="onEditAprovacao()" [disabled]="!this.form.valid"> Editar </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

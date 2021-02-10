@@ -1,0 +1,8 @@
+{
+  "appId": "com.projeto.encal",
+  "appName": "projeto-encal",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
+}

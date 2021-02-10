@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/grupos"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="!this.grupoloading">{{ grupoAtual.nome }}</ion-title>
+    <ion-buttons slot="primary">
+        <ion-button [routerLink]="['/', 'grupos', 'edit', current_grupo]">
+          <ion-icon name="refresh" slot="icon-only"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngFor="let message of messages">
+      <div *ngIf="message.tipo == 'data'" class="messageData">{{ message.data }}</div>
+      <ion-col size="9" *ngIf="current_user_id !== message.user_id && message.tipo === 'msg'" class="message other-message">
+        <b>{{ message.user }}</b><br>
+        <span>{{ message.msg }}</span>
+        <div class="time" text-right>
+          <br>
+          {{ message.createdAt }}
+        </div>
+      </ion-col>
+      <ion-col offset="3" size="9" *ngIf="current_user_id === message.user_id && message.tipo === 'msg'" class="message my-message">
+        <b>{{ message.user }}</b><br>
+        <span>{{ message.msg }}</span>
+        <div class="time" text-right>
+          <br>
+          {{ message.createdAt }}
+        </div>
+      </ion-col>
+      <ion-col size="9" *ngIf="current_user_id !== message.user_id && message.tipo === 'imagem'" class="message other-message">
+        <b>{{ message.user }}</b><br>
+        <div class="time" text-right>
+          <ion-img role="button" class="image" (click)="presentModal(this.authService.urlServer+message.url)" [src]="this.authService.urlServer+message.url"></ion-img>
+          <br>
+          {{ message.createdAt }}
+        </div>
+      </ion-col>
+      <ion-col offset="3" size="9" *ngIf="current_user_id === message.user_id && message.tipo === 'imagem'" class="message my-message">
+        <b>{{ message.user }}</b><br>
+        <div class="time" text-right>
+          <ion-img role="button" class="image" (click)="presentModal(this.authService.urlServer+message.url)" [src]="this.authService.urlServer+message.url"></ion-img>
+          <br>
+          {{ message.createdAt }}
+        </div>
+      </ion-col>
+      <ion-col size="9" *ngIf="current_user_id !== message.user_id && message.tipo === 'anexo'" class="message other-message">
+        <b>{{ message.user }}</b><br>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <font text-right *ngIf="message.downurl == null" style="font-size: 15px">{{ message.anexoNome }}</font>
+              <font text-right *ngIf="message.downurl != null" style="font-size: 15px">{{ message.anexoNome }}</font>
+            </ion-col>
+            <ion-col size="3" text-end *ngIf="message.downurl == null" (click)="downloadAnexo(this.authService.urlServer+message.url, message.extensao, message.msg_id)">
+              <ion-icon name="cloud-download" style="font-size: 30px;"></ion-icon>
+            </ion-col>
+            <ion-col size="3" text-end *ngIf="message.downurl != null" (click)="openFile(message.downurl, message.mimetype, message.msg_id)">
+              <ion-icon name="attach" style="font-size: 30px;"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div class="time" text-right>
+          {{ message.createdAt }}
+        </div>
+        <ion-progress-bar color="secondary" [value]="message.porcentagem"></ion-progress-bar>      
+      </ion-col>
+      <ion-col offset="3" size="9" *ngIf="current_user_id === message.user_id && message.tipo === 'anexo'" class="message my-message">
+        <b>{{ message.user }}</b><br>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <font text-right *ngIf="message.downurl == null" style="font-size: 15px">{{ message.anexoNome }}</font>
+              <font text-right *ngIf="message.downurl != null" style="font-size: 15px">{{ message.anexoNome }}</font>
+            </ion-col>
+            <ion-col size="3" text-end *ngIf="!message.isdownloading && message.downurl == null" (click)="downloadAnexo(this.authService.urlServer+message.url, message.extensao, message.msg_id)">
+              <ion-icon name="cloud-download" style="font-size: 30px;"></ion-icon>
+              
+            </ion-col>
+            <ion-col size="3" text-end *ngIf="!message.isdownloading && message.downurl != null" (click)="openFile(message.downurl, message.mimetype, message.msg_id)">
+              <ion-icon name="attach" style="font-size: 30px;"></ion-icon>
+            </ion-col>
+            <ion-col size="3" text-end *ngIf="message.isdownloading">
+              <ion-spinner></ion-spinner>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div class="time" text-right>
+          {{ message.createdAt }}
+        </div>
+        <ion-progress-bar color="secondary" [value]="message.porcentagem"></ion-progress-bar>      
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="light">
+    <ion-row align-items-center no-padding>
+      <ion-col size='10'>
+        <textarea autosize maxRows="3" [(ngModel)]="newMsg" class="msg-input"></textarea>
+      </ion-col>
+      <ion-col size='2'>
+        <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''" class="msg-btn" (click)="sendMessage()">
+          <ion-icon name="ios-send" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
