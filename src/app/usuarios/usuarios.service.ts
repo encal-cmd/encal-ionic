@@ -16,19 +16,6 @@ interface UsuarioData {
   senha: string;
 }
 
-interface UsuarioDataRails {
-  status: number;
-  usuario: {
-    ativo: boolean;
-    id: number;
-    email: string;
-    cpf: string;
-    nome: string;
-    permissoes: string;
-    permissoesIds: string;
-  };
-}
-
 interface GetUsuariosRails {
   usuarios: [];
 }
@@ -42,6 +29,7 @@ interface LoginUsuario {
     cpf: string;
     nome: string;
     permissoes: string;
+    admin: boolean;
   };
 }
 
@@ -129,7 +117,7 @@ export class UsuariosService implements OnDestroy {
 
   criarUsuarioRails(email: string, nome: string, cpf: string, permissoes: string, perms: string) {
     // tslint:disable-next-line: max-line-length
-    let noUsuario = {id: Math.random().toString(), nome: nome, email: email, cpf: cpf, ativo: true, senha: '123456', permissoes: permissoes, permissoesIds: perms};
+    let noUsuario = {id: Math.random().toString(), nome: nome, email: email, cpf: cpf, ativo: true, senha: '123456', permissoes: permissoes, grupoUsuIds: perms};
     // tslint:disable-next-line: max-line-length
     return this.http.post<NovoUsuRails>(this.authService.urlServer + '/api/criar_usuario', { user_id: this.currentUser.id, usuario: noUsuario}).pipe(take(1), tap(usuData => {
         if (usuData.status === 'OK') {
@@ -157,9 +145,9 @@ export class UsuariosService implements OnDestroy {
     return this.onesignalId;
   }
 
-  updateUsuarioRails(usuarioId: number, nome: string, email: string, cpf: string, ativo: boolean, permissoes: string, perms: string) {
+  updateUsuarioRails(usuarioId: number, nome: string, email: string, cpf: string, ativo: boolean, perms: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.post<NovoUsuRails>(this.authService.urlServer + '/api/update_usuario', { user_id: this.currentUser.id, id: usuarioId, nome: nome, email: email, cpf: cpf, ativo: ativo, permissoes: permissoes, permissoesIds: perms }).pipe(take(1), tap(usuData => {
+    return this.http.post<NovoUsuRails>(this.authService.urlServer + '/api/update_usuario', { user_id: this.currentUser.id, id: usuarioId, nome: nome, email: email, cpf: cpf, ativo: ativo, grupoUsuIds: perms }).pipe(take(1), tap(usuData => {
         if (usuData.status === 'OK') {
           this.getUsuariosRails().subscribe();
         }
@@ -177,7 +165,7 @@ export class UsuariosService implements OnDestroy {
         for (const key in usuariosData) {
           if (usuariosData.hasOwnProperty(key)) {
             // tslint:disable-next-line: max-line-length
-            usuarios.push(new Usuario(usuariosData[key][0], usuariosData[key][1], usuariosData[key][2], usuariosData[key][3], usuariosData[key][4], this.fixPermissoes(usuariosData[key][5])));
+            usuarios.push(new Usuario(usuariosData[key][0], usuariosData[key][1], usuariosData[key][2], usuariosData[key][3], usuariosData[key][4]));
           }
         }
         return usuarios;
@@ -191,41 +179,9 @@ export class UsuariosService implements OnDestroy {
 
   getUsuarioRails(id: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.post<UsuarioDataRails>(this.url + '/api/get_usuario', { id: id }).pipe(map(usuData => {
-      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", usuData);
+    return this.http.post<any>(this.url + '/api/get_usuario', { id: id }).pipe(map(usuData => {
         // tslint:disable-next-line: max-line-length
-        return new Usuario(usuData.usuario.id, usuData.usuario.nome, usuData.usuario.email, usuData.usuario.cpf, usuData.usuario.ativo, this.fixPermissoes(usuData.usuario.permissoes), usuData.usuario.permissoesIds);
-      })
-    );
-  }
-
-  login(cpf: string, senha: string) {
-    // tslint:disable-next-line: max-line-length
-    return this.http.get('https://encal-a4d41.firebaseio.com/usuarios.json?orderBy="cpf"&equalTo="' + cpf + '"').pipe(take(1), map(userData => {
-
-        let usuario: Usuario;
-        let usuarioEncontrado = false;
-        let senhaErrada = false;
-        for (const key in userData) {
-          if (userData.hasOwnProperty(key)) {
-            usuarioEncontrado = true;
-            if (this.sha_256_encryp(senha) != userData[key].senha) {
-              senhaErrada = true;
-            }
-            usuario = new Usuario(parseInt(key), userData[key].nome, userData[key].email, userData[key].cpf, userData[key].ativo, []);
-          }
-        }
-
-        if (!usuarioEncontrado) {
-          return 'USUARIO_NAO_ENCONTRADO';
-        }
-
-        if (senhaErrada) {
-          return 'SENHA_ERRADA';
-        }
-
-        this.setUserData(usuario);
-        return usuario;
+        return new Usuario(usuData.usuario.id, usuData.usuario.nome, usuData.usuario.email, usuData.usuario.cpf, usuData.usuario.ativo, [], usuData.usuario.grupoUsuIds);
       })
     );
   }
@@ -234,9 +190,12 @@ export class UsuariosService implements OnDestroy {
 
     return this.http.post<LoginUsuario>(this.url + '/api/login', { cpf: cpf, senha: senha }).pipe(take(1), map(usuData => {
         if (usuData.status == "OK") {
+          console.log("usuData")
+          console.log("usuData")
+          console.log(usuData)
           let usuario: Usuario;
           // tslint:disable-next-line: max-line-length
-          usuario = new Usuario(usuData.usuario.id, usuData.usuario.nome, usuData.usuario.email, usuData.usuario.cpf, usuData.usuario.ativo, this.fixPermissoes(usuData.usuario.permissoes));
+          usuario = new Usuario(usuData.usuario.id, usuData.usuario.nome, usuData.usuario.email, usuData.usuario.cpf, usuData.usuario.ativo, usuData.usuario.permissoes, "", usuData.usuario.admin);
           this.setUserData(usuario);
           return usuario;
         } else {
@@ -251,7 +210,7 @@ export class UsuariosService implements OnDestroy {
     this._user.next(usuario);
     this.currentUser = usuario;
     // tslint:disable-next-line: max-line-length
-    const data = JSON.stringify({id: usuario.id, nome: usuario.nome, email: usuario.email, ativo: usuario.ativo, permissoes: usuario.permissoes});
+    const data = JSON.stringify({id: usuario.id, nome: usuario.nome, email: usuario.email, ativo: usuario.ativo, permissoes: usuario.permissoes, admin: usuario.admin});
     Plugins.Storage.set({key: 'usuarioData', value: data});
   }
 
@@ -263,13 +222,13 @@ export class UsuariosService implements OnDestroy {
   autoLogin() {
     return from(Plugins.Storage.get({key: 'usuarioData'})).pipe(map(storedData => {
       // tslint:disable-next-line: max-line-length
-      const parsedData = JSON.parse(storedData.value) as {id: number, nome: string, email: string, cpf: string, ativo: boolean, permissoes: []};
+      const parsedData = JSON.parse(storedData.value) as {id: number, nome: string, email: string, cpf: string, ativo: boolean, permissoes: [], admin: boolean};
       if (!storedData || !storedData.value) {
         return null;
         // throw new Error('NO SOTRED DATA AUTH SEFVICE');
       }
 
-      const user = new Usuario(parsedData.id, parsedData.nome, parsedData.email, parsedData.cpf, parsedData.ativo, parsedData.permissoes);
+      const user = new Usuario(parsedData.id, parsedData.nome, parsedData.email, parsedData.cpf, parsedData.ativo, parsedData.permissoes, "", parsedData.admin);
       return user;
     }), tap(user => {
       if (user) {
@@ -301,6 +260,7 @@ export class UsuariosService implements OnDestroy {
   }
 
   fixPermissoes(permissoes) {
+    return []
     const perms = permissoes.split('||');
     const returnPerms = [];
     for (const i in perms) {

@@ -5,6 +5,7 @@ import { UsuariosService } from '../usuarios.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Usuario } from '../usuario.model';
 import { IonicSelectableComponent } from 'ionic-selectable';
+import { GrupoUsuariosService } from 'src/app/grupo-usuarios/grupo-usuarios.service';
 
 @Component({
   selector: 'app-edit',
@@ -23,6 +24,7 @@ export class EditPage implements OnInit {
   constructor(
     private loadingCtrl: LoadingController,
     private usuarioService: UsuariosService,
+    private grupoUsuarioService: GrupoUsuariosService,
     private router: Router,
     private alertCtrl: AlertController,
     private modalController: ModalController,
@@ -32,7 +34,7 @@ export class EditPage implements OnInit {
     console.log("ENTROO ")
     this.isLoading = true;
     this.route.paramMap.subscribe(paramMap => {
-      this.usuarioService.getPermissoes().subscribe(data => {
+      this.grupoUsuarioService.getLista().subscribe(data => {
         this.permissoesGet = data;
         console.log("efefefefef", this.permissoesGet);
         this.usuarioService.getUsuarioRails(paramMap.get('usuarioId')).subscribe(usuario => {
@@ -43,7 +45,7 @@ export class EditPage implements OnInit {
             email: new FormControl(usuario.email, { updateOn: 'blur', validators: [Validators.required, Validators.email] }),
             nome: new FormControl(usuario.nome, { updateOn: 'blur', validators: [Validators.required] }),
             // tslint:disable-next-line: max-line-length
-            permissoes: new FormControl(this.permissoesGet.filter(p => usuario.permissoesIds.split('||').includes(p.id.toString())), { updateOn: 'blur' }),
+            permissoes: new FormControl(this.permissoesGet.filter(p => usuario.grupoUsuIds.split('||').includes(p.id.toString())), { updateOn: 'blur' }),
             novaSenha: new FormControl(null, { updateOn: 'blur' }),
             novaSenhaConf: new FormControl(null, { updateOn: 'blur' })
           });
@@ -91,7 +93,7 @@ export class EditPage implements OnInit {
       loadingEl.present();
 
       // tslint:disable-next-line: max-line-length
-      this.usuarioService.updateUsuarioRails(this.usuario.id, this.form.value.nome, this.form.value.email, this.form.value.cpf, true, permissoesIds.join('||'), this.permissoes.join('||')).subscribe(resp => {
+      this.usuarioService.updateUsuarioRails(this.usuario.id, this.form.value.nome, this.form.value.email, this.form.value.cpf, true, permissoesIds.join('||')).subscribe(resp => {
         loadingEl.dismiss();
         if (resp.status === 'OK') {
           this.router.navigate(['/usuarios']);

@@ -27,7 +27,7 @@
               <ion-input type="text" formControlName="cpf"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Permissões</ion-label>
+              <ion-label>Grupos</ion-label>
               <ionic-selectable
                 formControlName="permissoes"
                 [items]="permissoesGet"
@@ -41,7 +41,7 @@
           </ion-list>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="currentUser && currentUser.permissoes[5]">
+      <ion-row *ngIf="currentUser && currentUser.temPermissao('resetar_usuario')">
         <ion-col>
           <ion-button type="button" color="primary" expand="block" (click)="resetarSenha()"> Resetar Senha </ion-button>
         </ion-col>

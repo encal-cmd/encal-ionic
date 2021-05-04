@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 
 interface NovoAttAprov {
   status: string;
+  aprovacao_id: string;
 }
 
 interface AprovDataRails {
@@ -104,7 +105,8 @@ export class AprovacaoService implements OnDestroy {
 
   getAprovacao(id: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.post<AprovDataRails>(this.authService.urlServer + '/api/get_aprovacao', { aprovacao_id: id }).pipe(map(usuData => {
+
+    return this.http.post<any>(this.authService.urlServer + '/api/get_aprovacao', { aprovacao_id: id, onesigId: this.usuarioService.getOnesignal(), user_id: this.currentUser.id }).pipe(map(usuData => {
         return {
           id: usuData.aprovacao[0],
           empresa: usuData.aprovacao[1],
@@ -125,6 +127,7 @@ export class AprovacaoService implements OnDestroy {
           prestadorConta: usuData.aprovacao[16],
           prestadorCpf: usuData.aprovacao[17],
           prestadorId: usuData.aprovacao[18],
+          anexos: usuData.aprovacao[19]
         };
         // return new Grupo(usuData.grupo.id, usuData.grupo.nome, usuData.grupo.usuariosPermitidos);
       })
@@ -179,4 +182,15 @@ export class AprovacaoService implements OnDestroy {
       })
     );
   }
+
+  attDownloadMsg(anexoId, url) {
+    console.log('---------attDownloadMsg---', anexoId, url);
+    const onesig = this.usuarioService.getOnesignal();
+    // tslint:disable-next-line: max-line-length
+    return this.http.post<any>(this.authService.urlServer + '/api/attdownload_aprovacao', { anexo_aprovacao_id: anexoId, onesig: onesig, url: url, user_id: this.currentUser.id }).pipe(map(usuData => {
+        return usuData;
+      })
+    );
+  }
+
 }

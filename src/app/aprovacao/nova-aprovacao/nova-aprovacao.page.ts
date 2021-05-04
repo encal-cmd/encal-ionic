@@ -8,6 +8,11 @@ import { PrestadoresService } from 'src/app/prestadores/prestadores.service';
 import { UsuariosService } from 'src/app/usuarios/usuarios.service';
 import { Subscription } from 'rxjs';
 import { Usuario } from 'src/app/usuarios/usuario.model';
+import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-nova-aprovacao',
@@ -25,6 +30,16 @@ export class NovaAprovacaoPage implements OnInit, OnDestroy {
   avaliadoresSelect: Usuario[];
   isLoading;
   editMode = false;
+  fileTransfer: FileTransferObject;
+  globalUpOptions = [
+    {
+      nativepath: null,
+      nomeArquivo: 'Novo Anexo',
+      mime: '',
+      enviado: false
+    }
+  ];
+  nomeArquivo = "Novo Anexo"
 
   aprovacaoEdit = {
     id: 1,
@@ -55,7 +70,13 @@ export class NovaAprovacaoPage implements OnInit, OnDestroy {
     private modalController: ModalController,
     private prestadoresService: PrestadoresService,
     private usuarioService: UsuariosService,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private transfer: FileTransfer,
+    private file: File,
+    private filePath: FilePath,
+    private fileChooser: FileChooser,
+    private authService: AuthService
+    ) {
   }
 
   portChange(event: {
@@ -146,11 +167,13 @@ export class NovaAprovacaoPage implements OnInit, OnDestroy {
         form_val.obsPagamento,
         form_val.avaliadores
         ).subscribe(resp => {
-        loadingEl.dismiss();
-        if (resp.status === 'OK') {
-          this.form.reset();
-          this.router.navigate(['/aprovacao']);
-        } else {
+          if (resp.status === 'OK') {
+            this.enviarArquivo(loadingEl, resp.aprovacao_id)
+            
+            // this.form.reset();
+            // this.router.navigate(['/aprovacao']);
+          } else {
+          loadingEl.dismiss();
           this.alertCtrl.create({header: 'Ops!', message: resp.status, buttons: ['OK']}).then(alertEl => alertEl.present());
         }
       });
@@ -182,14 +205,14 @@ export class NovaAprovacaoPage implements OnInit, OnDestroy {
         form_val.obsPagamento,
         form_val.avaliadores
         ).subscribe(resp => {
-        loadingEl.dismiss();
-        if (resp.status === 'OK') {
-          this.form.reset();
-          this.router.navigate(['/aprovacao']);
-        } else {
-          this.alertCtrl.create({header: 'Ops!', message: resp.status, buttons: ['OK']}).then(alertEl => alertEl.present());
-        }
-      });
+          loadingEl.dismiss();
+          if (resp.status === 'OK') {
+            this.form.reset();
+            this.router.navigate(['/aprovacao']);
+          } else {
+            this.alertCtrl.create({header: 'Ops!', message: resp.status, buttons: ['OK']}).then(alertEl => alertEl.present());
+          }
+        });
     });
   }
 
@@ -197,5 +220,110 @@ export class NovaAprovacaoPage implements OnInit, OnDestroy {
     console.log(event);
     this.empresa = event.detail.value;
     console.log(this.empresa);
+  }
+  
+
+  uploadFile(ind: number) {
+    console.log("uploadFile")
+    this.fileChooser.open().then(uri => {
+      this.filePath.resolveNativePath(uri).then(nativepath => {
+        const indexdaextencao = nativepath.length - nativepath.lastIndexOf('.') - 1;
+        const indexdonome = nativepath.length - nativepath.lastIndexOf('/') - 1;
+        const extencao = nativepath.slice(-1 * indexdaextencao);
+        const nomeArquivo = nativepath.slice(-1 * indexdonome);
+        // alert(nativepath);
+        const rand = Math.floor(Math.random() * 9999999);
+        this.fileTransfer = this.transfer.create();
+        let mime = '';
+        switch (extencao) {
+          case 'pdf':
+            mime = 'application/pdf';
+            // code block
+            break;
+          case 'xls':
+          case 'xlsx':
+            mime = 'application/vnd.ms-excel';
+            // code block
+            break;
+          case 'doc':
+            mime = 'application/msword';
+            // code block
+            break;
+          case 'jpg':
+          case 'jpeg':
+            mime = 'image/jpeg';
+            // code block
+            break;
+          default:
+            mime = 'image/jpeg';
+            // code block
+        }
+
+        this.globalUpOptions[ind].nativepath = nativepath
+        this.globalUpOptions[ind].nomeArquivo = nomeArquivo
+        this.globalUpOptions[ind].mime = mime
+
+        console.log(nomeArquivo)
+        console.log(mime)
+        console.log(extencao)
+
+        this.nomeArquivo = nomeArquivo
+
+      }, erro => {
+        alert(JSON.stringify(erro));
+
+      });
+    }, erro => {
+      alert(JSON.stringify(erro));
+    });
+  }
+
+  enviarArquivo(loadingEl: any, solicitacaoId: any) {
+
+    console.log("ENTRO ENVIAR ARQUIVO")
+    console.log(loadingEl, solicitacaoId)
+
+    const arquivosEnviar = this.globalUpOptions.find(n => n.enviado == false)
+
+    if(arquivosEnviar != undefined && arquivosEnviar.nativepath != null) {
+      
+      const parametros = {solicitacao_id: solicitacaoId};
+      const options: FileUploadOptions = {
+        fileKey: 'file',
+        fileName: arquivosEnviar.nomeArquivo,
+        chunkedMode: false,
+        headers: {},
+        mimeType: arquivosEnviar.mime,
+        params: parametros
+      };
+  
+      this.fileTransfer.upload(arquivosEnviar.nativepath, this.authService.urlServer + '/api/up_file_aprovacao', options).then(data => {
+        console.log('Transfer Done =' + JSON.stringify(data));
+        arquivosEnviar.enviado = true
+        this.enviarArquivo(loadingEl, solicitacaoId)
+      }, erro => {
+        console.log(JSON.stringify(erro));
+        loadingEl.dismiss();
+      });
+
+    } else {
+      loadingEl.dismiss();
+      this.form.reset();
+      this.router.navigate(['/aprovacao']);
+    }
+
+  }
+
+  addAnexo() {
+    this.globalUpOptions.push({
+      nativepath: null,
+      nomeArquivo: 'Novo Anexo',
+      mime: '',
+      enviado: false
+    })
+  }
+
+  rmvFile(ind) {
+    this.globalUpOptions.splice(ind, 1)
   }
 }

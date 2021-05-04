@@ -1,23 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { IonicModule } from '@ionic/angular';
-import { NovaAprovacaoPageRoutingModule } from './nova-aprovacao-routing.module';
-import { NovaAprovacaoPage } from './nova-aprovacao.page';
-import { BrMaskerModule } from 'br-mask';
+
+import { GrupoUsuariosEditPageRoutingModule } from './grupo-usuarios-edit-routing.module';
+
+import { GrupoUsuariosEditPage } from './grupo-usuarios-edit.page';
 import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    NovaAprovacaoPageRoutingModule,
-    BrMaskerModule,
+    GrupoUsuariosEditPageRoutingModule,
     IonicSelectableModule
   ],
-  declarations: [NovaAprovacaoPage],
-  entryComponents: []
+  declarations: [GrupoUsuariosEditPage]
 })
-export class NovaAprovacaoPageModule {}
+export class GrupoUsuariosEditPageModule {}

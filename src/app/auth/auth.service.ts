@@ -49,9 +49,9 @@ export class AuthService {
   }
 
   get urlServer() {
-    return 'https://redeencal.com.br';
+    return 'https://d3b970b933d0.ngrok.io'
+    // return 'https://redeencal.com.br';
     return 'http://localhost:3000';
-    return 'https://927fd287695a.ngrok.io';
     return 'http://64.225.63.183';
   }
 

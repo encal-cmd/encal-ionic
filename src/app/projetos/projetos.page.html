@@ -5,7 +5,7 @@
       </ion-buttons>
       <ion-title>Projetos</ion-title>
       <ion-buttons slot="primary">
-          <ion-button routerLink="/projetos/form/new" *ngIf="currentUser && currentUser.permissoes[13]">
+          <ion-button routerLink="/projetos/form/new" *ngIf="currentUser && currentUser.temPermissao('criar_projeto')">
             <ion-icon name="add" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>

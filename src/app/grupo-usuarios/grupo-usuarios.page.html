@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Grupo de Usuários</ion-title>    
+    <ion-buttons slot="primary">
+        <ion-button (click)="attUsuarios()">
+          <ion-icon name="refresh" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button routerLink="/grupo_usuarios/new" *ngIf="currentUser && currentUser.temPermissao('criar_grupo_usuarios')">
+          <ion-icon name="add" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!isLoading && grupoUsuarioList.length <= 0" style="text-align: center; margin-top: 20px">Ainda não temos nenhum usuários...</div>
+  <ion-grid *ngIf="!isLoading && grupoUsuarioList.length > 0">
+    <ion-row>
+      <ion-col size="12" text-center *ngIf="currentUser && currentUser.temPermissao('editar_grupo_usuarios')">
+        <ion-item *ngFor="let grupo_usuario of grupoUsuarioList" [routerLink]="['/', 'grupo_usuarios', 'edit', grupo_usuario.id]" detail>
+          <ion-label>
+            <h2>{{grupo_usuario.nome}}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12" text-center *ngIf="currentUser && !currentUser.temPermissao('editar_grupo_usuarios')">
+        <ion-item *ngFor="let grupo_usuario of grupoUsuarioList">
+          <ion-label>
+            <h2>{{grupo_usuario.nome}}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

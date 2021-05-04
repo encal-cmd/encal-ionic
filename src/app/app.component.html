@@ -19,11 +19,11 @@
             <ion-icon name="calendar" slot="start"></ion-icon>
             <ion-label>Agenda</ion-label>
           </ion-item>
-          <ion-item lines="none" routerLink="/tarefas">
+          <ion-item lines="none" routerLink="/tarefas" *ngIf="currentUser && currentUser.temPermissao('ver_tarefas')">
             <ion-icon name="checkmark" slot="start"></ion-icon>
             <ion-label>Tarefas</ion-label>
           </ion-item>
-          <ion-item lines="none" routerLink="/projetos" *ngIf="currentUser && currentUser.permissoes[15]">
+          <ion-item lines="none" routerLink="/projetos" *ngIf="currentUser && currentUser.temPermissao('ver_projetos')">
             <ion-icon name="business" slot="start"></ion-icon>
             <ion-label>Projetos</ion-label>
           </ion-item>
@@ -33,20 +33,24 @@
             <ion-label>Contato</ion-label>
           </ion-item>
           -->
-          <ion-item lines="none" routerLink="/grupos" *ngIf="currentUser && currentUser.permissoes[0]">
+          <ion-item lines="none" routerLink="/grupos" *ngIf="currentUser && currentUser.temPermissao('ver_grupo')">
             <ion-icon name="chatboxes" slot="start"></ion-icon>
             <ion-label>Grupos</ion-label>
           </ion-item>
-          <ion-item lines="none" routerLink="/usuarios" *ngIf="currentUser && currentUser.permissoes[2]">
+          <ion-item lines="none" routerLink="/usuarios" *ngIf="currentUser && currentUser.temPermissao('ver_usuario')">
             <ion-icon name="contacts" slot="start"></ion-icon>
             <ion-label>Usuários</ion-label>
           </ion-item>
-          <ion-item lines="none" routerLink="/aprovacao" *ngIf="currentUser && currentUser.permissoes[6]">
+          <ion-item lines="none" routerLink="/grupo_usuarios" *ngIf="currentUser && currentUser.temPermissao('ver_grupo_usuarios')">
+            <ion-icon name="contacts" slot="start"></ion-icon>
+            <ion-label>Grupo de Usuários</ion-label>
+          </ion-item>
+          <ion-item lines="none" routerLink="/aprovacao" *ngIf="currentUser && currentUser.temPermissao('ver_aprovacao')">
             <ion-icon name="archive" slot="start"></ion-icon>
             <ion-label>Solicitação</ion-label>
           </ion-item>
           <!--
-          <ion-item lines="none" routerLink="/prestadores" *ngIf="currentUser && currentUser.permissoes[9]">
+          <ion-item lines="none" routerLink="/prestadores" *ngIf="currentUser && currentUser.temPermissao('ver_prestadores')">
             <ion-icon name="wallet" slot="start"></ion-icon>
             <ion-label>Prestadores</ion-label>
           </ion-item>

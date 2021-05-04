@@ -102,7 +102,7 @@ export class ArquivosGrupoPage implements OnInit {
     console.log(this.data['__zone_symbol__value']['data']['permissoes']);
   }
 
-  UploadFile() {
+  uploadFile() {
     this.fileChooser.open().then(uri => {
       this.filePath.resolveNativePath(uri).then(nativepath => {
         const indexdaextencao = nativepath.length - nativepath.lastIndexOf('.') - 1;

@@ -58,7 +58,35 @@
         <br>
         <font class="info">{{ aprovacao.obsPagamento }}</font>
       </ion-col>
+
       <ion-col size="12" text-center>
+        <font class="titulo">Anexo</font>
+        <hr>
+      </ion-col>
+      <ion-col size="12" text-center>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="4" *ngFor="let anexo of aprovacao.anexos">
+              <!-- <ion-img *ngIf="anexo.tipo == 'imagem'" (click)="presentModal(this.authService.urlServer + anexo.url)" [src]="this.authService.urlServer + anexo.url" class="img_class"></ion-img> -->
+              
+              <div *ngIf="anexo[4] == null" style="height: 100px; margin: 0 auto;" text-center (click)="downloadAnexo(this.authService.urlServer+anexo[1], anexo[2], anexo[0])"> 
+                {{ anexo[3] }}
+                <br>
+                <ion-icon *ngIf="!anexo[6]" name="cloud-download" style="font-size: 30px;" class="icon_primary"></ion-icon> 
+                <ion-spinner *ngIf="anexo[6]"></ion-spinner>
+              </div>
+              <div *ngIf="anexo[4] != null" style="height: 100px; margin: 0 auto;" text-center (click)="openFile(anexo[4], anexo[5], anexo[0])"> 
+                {{ anexo[3] }}
+                <br>
+                <ion-icon name="attach" style="font-size: 30px;" class="icon_primary"></ion-icon>
+              </div>
+            
+            
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+      <!-- <ion-col size="12" text-center>
         <font class="titulo">Prestador</font>
         <hr>
       </ion-col>
@@ -86,7 +114,7 @@
         <font class="titulo">CPF</font>
         <br>
         <font class="info">{{ aprovacao.prestadorCpf }}</font>
-      </ion-col>
+      </ion-col> -->
       <ion-col size="6" *ngIf="avaliadores.includes(currentUser.id.toString())">
           <ion-button type="button" color="primary" expand="block" (click)="avaliar(aprovacao.id, 'APROVAR')"> Aprovar </ion-button>
         </ion-col>

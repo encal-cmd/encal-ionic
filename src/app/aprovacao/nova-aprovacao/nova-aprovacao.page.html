@@ -11,63 +11,95 @@
 <ion-content>
   <form [formGroup]="form">
     <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item>
-              <ion-label position="floating">Titulo</ion-label>
-              <ion-input type="text" formControlName="titulo"></ion-input>
-            </ion-item>  
-            <ion-list>
-              <ion-radio-group value="Encal" formControlName="empresa" (ionChange)="trocaEmpresa($event)"> 
-                <ion-list-header>
-                  <ion-label>Empresa</ion-label>
-                </ion-list-header>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Dados da Solicitação</ion-card-title>
+          <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+        </ion-card-header>
+        <ion-card-content>
+          <ion-row>
+            <ion-col>
+              <ion-list>
                 <ion-item>
-                  <ion-label>Encal</ion-label>
-                  <ion-radio slot="start" value="Encal"></ion-radio>
+                  <ion-label position="floating">Titulo</ion-label>
+                  <ion-input type="text" formControlName="titulo"></ion-input>
+                </ion-item>  
+                <ion-list>
+                  <ion-radio-group value="Encal" formControlName="empresa" (ionChange)="trocaEmpresa($event)"> 
+                    <ion-list-header>
+                      <ion-label>Empresa</ion-label>
+                    </ion-list-header>
+                    <ion-item>
+                      <ion-label>Encal</ion-label>
+                      <ion-radio slot="start" value="Encal"></ion-radio>
+                    </ion-item>
+                  </ion-radio-group>
+                </ion-list>
+                <ion-item>
+                  <ion-label position="floating">Centro de Custo</ion-label>
+                  <ion-input type="text" formControlName="centroCusto"></ion-input>
+                </ion-item>  
+                <ion-item>
+                  <ion-label position="floating">Data Solicitação</ion-label>
+                  <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataSolicitacao"></ion-datetime>
+                </ion-item>  
+                <ion-item>
+                  <ion-label position="floating">Data Entrega</ion-label>
+                  <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataEntrega"></ion-datetime>
+                </ion-item>  
+                <ion-item>
+                  <ion-label position="floating">Solicitante</ion-label>
+                  <ion-input type="text" formControlName="solicitante"></ion-input>
+                </ion-item>  
+                <ion-item>
+                  <ion-label position="floating">Valor</ion-label>
+                  <ion-input type="text" formControlName="valor" placeholder="(R$) Real" [brmasker]="{money: true, decimal: 2}" [disabled]="this.editMode"></ion-input>
                 </ion-item>
-              </ion-radio-group>
-            </ion-list>
-            <ion-item>
-              <ion-label position="floating">Centro de Custo</ion-label>
-              <ion-input type="text" formControlName="centroCusto"></ion-input>
-            </ion-item>  
-            <ion-item>
-              <ion-label position="floating">Data Solicitação</ion-label>
-              <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataSolicitacao"></ion-datetime>
-            </ion-item>  
-            <ion-item>
-              <ion-label position="floating">Data Entrega</ion-label>
-              <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dataEntrega"></ion-datetime>
-            </ion-item>  
-            <ion-item>
-              <ion-label position="floating">Solicitante</ion-label>
-              <ion-input type="text" formControlName="solicitante"></ion-input>
-            </ion-item>  
-            <ion-item>
-              <ion-label position="floating">Valor</ion-label>
-              <ion-input type="text" formControlName="valor" placeholder="(R$) Real" [brmasker]="{money: true, decimal: 2}" [disabled]="this.editMode"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Descrição Pagamento</ion-label>
-              <ion-input type="text" formControlName="obsPagamento"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Avaliadores</ion-label>
-              <ionic-selectable
-                formControlName="avaliadores"
-                [items]="avaliadoresSelect"
-                itemValueField="id"
-                itemTextField="nome"
-                [isMultiple]="true"
-                [canSearch]="true"
-                >
-              </ionic-selectable>
-            </ion-item>
-          </ion-list>
-        </ion-col>
-      </ion-row>
+                <ion-item>
+                  <ion-label position="floating">Descrição Pagamento</ion-label>
+                  <ion-input type="text" formControlName="obsPagamento"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Avaliadores</ion-label>
+                  <ionic-selectable
+                    formControlName="avaliadores"
+                    [items]="avaliadoresSelect"
+                    itemValueField="id"
+                    itemTextField="nome"
+                    [isMultiple]="true"
+                    [canSearch]="true"
+                    >
+                  </ionic-selectable>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+      <ion-card>
+
+        <ion-card-header>
+          <ion-card-title>Anexo da Solicitação</ion-card-title>
+          <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+        </ion-card-header>
+        <ion-card-content>
+          <ion-row *ngFor="let anexo of globalUpOptions; let i = index">
+            <ion-col>
+              <ion-button (click)="uploadFile(i)">
+                <ion-icon slot="icon-only" name="add"></ion-icon>{{anexo.nomeArquivo}}
+              </ion-button>
+              <ion-button color="danger" (click)="rmvFile(i)">
+                <ion-icon slot="icon-only" name="remove"></ion-icon>Remover
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-button (click)="addAnexo()" style="width: 100%;">
+              <ion-icon slot="icon-only" name="add"></ion-icon>Add Anexo
+            </ion-button>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
       <ion-row>
         <ion-col>
           <ion-button *ngIf="!this.editMode" type="button" color="primary" expand="block" (click)="onCreateAprovacao()" [disabled]="!this.form.valid"> Cadastrar </ion-button>

@@ -53,6 +53,10 @@ const routes: Routes = [
   {
     path: 'calendario',
     loadChildren: () => import('./calendario/calendario.module').then( m => m.CalendarioPageModule), canLoad: [AuthGuard]
+  },
+  {
+    path: 'grupo_usuarios',
+    loadChildren: () => import('./grupo-usuarios/grupo-usuarios.module').then( m => m.GrupoUsuariosPageModule)
   }
 ];
 
